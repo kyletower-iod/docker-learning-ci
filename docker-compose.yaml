@@ -1,0 +1,32 @@
+services:
+  api:
+    build: ./api
+    container_name: api_c
+    ports:
+      - '4000:4000'
+    command: npm run dev
+
+    # NEW: The modern way to sync files
+    develop:
+      watch:
+        - action: sync
+          path: ./api
+          target: /app
+          ignore:
+            - node_modules
+
+  client:
+    build: ./client
+    container_name: client_c
+    # We map port 3000 (Local) to 5173 (Vite's default container port)
+    ports:
+      - '3000:5173'
+    command: npm run dev -- --host
+
+    develop:
+      watch:
+        - action: sync
+          path: ./client
+          target: /app
+          ignore:
+            - node_modules
